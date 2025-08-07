@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fancy Discord Text Using Markdown</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 80%;
+            margin-bottom: 10px;
+        }
+
+        textarea {
+            width: 80%;
+            height: 100px;
+            padding: 10px;
+            font-size: 16px;
+            margin-top: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            resize: none;
+        }
+
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+
+        p {
+            font-size: 16px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Fancy Discord Text Using Markdown</h1>
+    <input type="text" id="inputText" placeholder="Enter text" oninput="convertText()">
+    <textarea id="outputText" readonly></textarea>
+    <p>Copy the converted text from the box above</p>
+    <button id="copyButton" onclick="copyText()">Copy</button>
+</div>
+
+<script>
+    function convertText() {
+        const input = document.getElementById('inputText').value;
+        let output = '';
+        let spaceCount = 0;
+        let sentenceStarted = false;
+
+        for (let i = 0; i < input.length; i++) {
+            const char = input[i];
+
+            if (!sentenceStarted && char.match(/[a-zA-Z]/)) {
+                output += `**${char.toLowerCase()}** `;
+                sentenceStarted = true;
+            } else if (char === ' ') {
+                spaceCount++;
+            } else if (char.match(/[a-zA-Z]/)) {
+                if (spaceCount > 0) {
+                    output += ' ';
+                    spaceCount = 0;
+                }
+                if ((i + 1) % 2 === 0) {
+                    output += `*${char.toUpperCase()}* `;
+                } else {
+                    output += `**${char.toLowerCase()}** `;
+                }
+            } else {
+                if (spaceCount > 0) {
+                    output += ' ';
+                    spaceCount = 0;
+                }
+                output += char;
+            }
+
+            if (char === '.' || char === '?' || char === '!') {
+                sentenceStarted = false;
+            }
+        }
+
+        document.getElementById('outputText').value = output.trim();
+        document.getElementById('copyButton').textContent = 'Copy';
+    }
+
+    function copyText() {
+        const outputText = document.getElementById('outputText');
+        outputText.select();
+        document.execCommand('copy');
+
+        const copyButton = document.getElementById('copyButton');
+        copyButton.textContent = 'Copied!';
+    }
+</script>
+
+</body>
+</html>
